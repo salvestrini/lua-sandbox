@@ -1,5 +1,10 @@
 enable_language(CXX)
 
+option(WANT_DEBUG    "Debugging"     ON)
+option(WANT_LOGS     "Logs"          ON)
+
+configure_file(config.hh.in config.hh)
+
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(GNUInstallDirs)
@@ -10,33 +15,49 @@ if(HAVE_EXECINFO_H)
   CHECK_SYMBOL_EXISTS(backtrace_symbols execinfo.h HAVE_BACKTRACE_SYMBOLS)
 endif()
 
-CHECK_INCLUDE_FILE(regex.h HAVE_REGEX_H)
-if(HAVE_REGEX_H)
-  CHECK_SYMBOL_EXISTS(regexec  regex.h HAVE_REGEXEC)
-  CHECK_SYMBOL_EXISTS(regcomp  regex.h HAVE_REGCOMP)
-  CHECK_SYMBOL_EXISTS(regerror regex.h HAVE_REGERROR)
-  CHECK_SYMBOL_EXISTS(regfree  regex.h HAVE_REGFREE)
-endif()
+set(LUA_VERSION "5.3.0")
 
-set(LUASB_LIBRARIES "")
-
-set(LUASB_INCLUDES "" PARENT_SCOPE)
-
-include_directories(${LUASB_INCLUDES})
-
-option(WANT_DEBUG    "Debugging"     ON)
-option(WANT_LOGS     "Logs"          ON)
-
-configure_file(config.hh.in config.hh)
-
-#if(CMAKE_COMPILER_IS_GNUCXX)
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
-#endif()
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lua-${LUA_VERSION}/src")
+include_directories("${CMAKE_SOURCE_DIR}/lua-sandbox/lua-${LUA_VERSION}/src")
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
 
 add_library(luasb SHARED
+  lua-${LUA_VERSION}/src/lapi.c
+  lua-${LUA_VERSION}/src/lcode.c
+  lua-${LUA_VERSION}/src/lctype.c
+  lua-${LUA_VERSION}/src/ldebug.c
+  lua-${LUA_VERSION}/src/ldo.c
+  lua-${LUA_VERSION}/src/ldump.c
+  lua-${LUA_VERSION}/src/lfunc.c
+  lua-${LUA_VERSION}/src/lgc.c
+  lua-${LUA_VERSION}/src/llex.c
+  lua-${LUA_VERSION}/src/lmem.c
+  lua-${LUA_VERSION}/src/lobject.c
+  lua-${LUA_VERSION}/src/lopcodes.c
+  lua-${LUA_VERSION}/src/lparser.c
+  lua-${LUA_VERSION}/src/lstate.c
+  lua-${LUA_VERSION}/src/lstring.c
+  lua-${LUA_VERSION}/src/ltable.c
+  lua-${LUA_VERSION}/src/ltm.c
+  lua-${LUA_VERSION}/src/lundump.c
+  lua-${LUA_VERSION}/src/lvm.c
+  lua-${LUA_VERSION}/src/lzio.c
+  lua-${LUA_VERSION}/src/lauxlib.c
+  lua-${LUA_VERSION}/src/lbaselib.c
+  lua-${LUA_VERSION}/src/lbitlib.c
+  lua-${LUA_VERSION}/src/lcorolib.c
+  lua-${LUA_VERSION}/src/ldblib.c
+  lua-${LUA_VERSION}/src/liolib.c
+  lua-${LUA_VERSION}/src/lmathlib.c
+  lua-${LUA_VERSION}/src/loslib.c
+  lua-${LUA_VERSION}/src/lstrlib.c
+  lua-${LUA_VERSION}/src/ltablib.c
+  lua-${LUA_VERSION}/src/lutf8lib.c
+  lua-${LUA_VERSION}/src/loadlib.c
+  lua-${LUA_VERSION}/src/linit.c
+
   luasb.cc
 )
 
@@ -56,6 +77,6 @@ if("${CXX_SUPPORTS_WUNDEF}")
   MACRO_ADD_COMPILE_FLAGS(luasb "-Wundef")
 endif()
 
-target_link_libraries(luasb ${LUASB_LIBRARIES})
+set_source_files_properties(lua.cc PROPERTIES COMPILE_FLAGS -std=c++11)
 
 install(TARGETS luasb DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})

@@ -6,6 +6,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 link_directories(${CMAKE_BINARY_DIR}/lua-sandbox)
 
-add_executable(test test.cc)
+add_executable(test-01 test-01.cc)
 
-target_link_libraries(test luasb)
+target_link_libraries(test-01 luasb)

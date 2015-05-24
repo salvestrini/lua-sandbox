@@ -56,8 +56,19 @@ namespace luasb {
                 return ptr;
         }
 
-        lua_vm::lua_vm(const std::string & code)
+        lua_vm::lua_vm()
+        { pimpl_ = 0; }
+
+        void lua_vm::flush()
         {
+                if (pimpl_)
+                        lua_close(TCAST_LUAS(pimpl_));
+        }
+
+        bool lua_vm::load(const std::string & code)
+        {
+                flush();
+
                 pimpl_ = TCAST_LUAS(lua_newstate(l_alloc, NULL));
                 if (!pimpl_)
                         throw std::bad_alloc();
@@ -65,14 +76,18 @@ namespace luasb {
                 luaL_loadstring(TCAST_LUAS(pimpl_), code.c_str());
                 luaL_openlibs(TCAST_LUAS(pimpl_));
                 lua_pcall(TCAST_LUAS(pimpl_), 0, LUA_MULTRET, 0);
+
+                return true;
         }
 
         lua_vm::~lua_vm()
-        { lua_close(TCAST_LUAS(pimpl_)); }
+        {  }
 
         bool lua_vm::execute(const std::string & fname)
         {
                 if (fname.empty())
+                        return false;
+                if (!pimpl_)
                         return false;
 
                 lua_getglobal(TCAST_LUAS(pimpl_), fname.c_str());

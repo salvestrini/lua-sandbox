@@ -29,8 +29,12 @@ namespace luasb {
 
 class lua_vm {
 public:
-        lua_vm(const std::string & code);
+        lua_vm();
+
         virtual ~lua_vm();
+
+        bool load(const std::string & code);
+        void flush();
 
         bool execute(const std::string & fname);
 

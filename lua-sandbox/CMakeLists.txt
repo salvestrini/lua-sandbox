@@ -17,6 +17,8 @@ include_directories("${CMAKE_SOURCE_DIR}/lua-sandbox/lua-${LUA_VERSION}/src")
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
 
+add_definitions(-DLUA_USE_LINUX)
+
 add_library(luasb SHARED
   lua-${LUA_VERSION}/src/lapi.c
   lua-${LUA_VERSION}/src/lcode.c

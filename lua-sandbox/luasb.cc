@@ -49,11 +49,7 @@ namespace luasb {
                         return NULL;
                 }
 
-                void * tmp = realloc(ptr, nsize);
-                if (!tmp)
-                        throw std::bad_alloc();
-
-                return ptr;
+                return realloc(ptr, nsize);
         }
 
         lua_vm::lua_vm()

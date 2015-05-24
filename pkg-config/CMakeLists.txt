@@ -1,5 +1,6 @@
 include(GNUInstallDirs)
 include(MacroSetOption)
+
 luasb_set_option(
   LUASB_BUILD_SHARED_LIBS
   TRUE BOOL

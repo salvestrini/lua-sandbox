@@ -9,12 +9,6 @@ include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(GNUInstallDirs)
 
-CHECK_INCLUDE_FILE(execinfo.h HAVE_EXECINFO_H)
-if(HAVE_EXECINFO_H)
-  CHECK_SYMBOL_EXISTS(backtrace         execinfo.h HAVE_BACKTRACE)
-  CHECK_SYMBOL_EXISTS(backtrace_symbols execinfo.h HAVE_BACKTRACE_SYMBOLS)
-endif()
-
 set(LUA_VERSION "5.3.0")
 
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lua-${LUA_VERSION}/src")
@@ -59,7 +53,12 @@ add_library(luasb SHARED
   lua-${LUA_VERSION}/src/linit.c
 
   luasb.cc
-)
+  )
+
+install(FILES
+  luasb.hh
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/lua-sandbox"
+  )
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-Wall"   CXX_SUPPORTS_WALL)

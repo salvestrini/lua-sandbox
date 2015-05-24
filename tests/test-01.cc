@@ -6,6 +6,6 @@ int main(int argc, char * argv[])
 
         x.load("function f = () ; x = 1 ; end");
         x.execute("");
-        
+
         return 1;
 }

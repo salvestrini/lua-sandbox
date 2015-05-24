@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2012, 2013, 2014 Francesco Salvestrini
+// Copyright (C) 2015 Francesco Salvestrini
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,4 +19,20 @@
 #ifndef LUASB_LUASB
 #define LUASB_LUASB
 
+#include <string>
+
+namespace luasb {
+
+class lua_vm {
+public:
+        lua_vm(const std::string & code);
+        virtual ~lua_vm();
+
+        bool execute(const std::string & fname);
+
+private:
+        void * pimpl_;
+};
+
+}
 #endif
